@@ -73,8 +73,32 @@ function createHearts() {
         setTimeout(() => {
             heart.remove();
         }, 6000);
+        
 
     }, 400);
 }
 
+
 createHearts();
+const music = document.getElementById("bgMusic");
+
+if (localStorage.getItem("musicTime")) {
+    music.currentTime = localStorage.getItem("musicTime");
+}
+
+music.play();
+
+setInterval(() => {
+    localStorage.setItem("musicTime", music.currentTime);
+}, 1000);
+const music = document.getElementById("bgMusic");
+
+if (localStorage.getItem("musicTime")) {
+    music.currentTime = localStorage.getItem("musicTime");
+}
+
+music.play();
+
+setInterval(() => {
+    localStorage.setItem("musicTime", music.currentTime);
+}, 1000);
