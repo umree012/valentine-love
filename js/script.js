@@ -1,35 +1,22 @@
-function showLove() {
-    alert("Hehe I knew it 😌💗 You belong to me now.");
-}
+/* =========================================
+   💖 VALENTINE WEBSITE - MAIN SCRIPT FILE
+   Organized & Clean Version
+========================================= */
 
-window.onbeforeunload = function () {
-    return "Where are you going??? 😡💖";
-};
-window.onload = function() {
-    document.body.addEventListener("click", function() {
-        document.getElementById("bgMusic").play();
-    }, { once: true });
-};
-function openLetter() {
-    document.getElementById("letter").classList.remove("hidden");
-    typeWriter();
-}
+/* =========================================
+   🌸 GLOBAL VARIABLES
+========================================= */
 
-let message = "From the moment you came into my life, everything turned pink and magical. 🌸💖 " +
-"I don’t just like you… I am OBSESSED with you. 😤💕 " +
-"You are my happiness, my comfort, my favorite notification. 💌 " +
-"And just so you know… you’re not allowed to leave. Ever. 💗😌";
+let typeIndex = 0;
+let typingSpeed = 40;
 
-let i = 0;
+const loveMessage =
+    "From the moment you came into my life, everything turned pink and magical. 🌸💖 " +
+    "I don’t just like you… I am OBSESSED with you. 😤💕 " +
+    "You are my happiness, my comfort, my favorite notification. 💌 " +
+    "And just so you know… you’re not allowed to leave. Ever. 💗😌";
 
-function typeWriter() {
-    if (i < message.length) {
-        document.getElementById("typeText").innerHTML += message.charAt(i);
-        i++;
-        setTimeout(typeWriter, 40);
-    }
-}
-let reasons = [
+const reasonsList = [
     "Because your smile fixes my worst days 💖",
     "Because you are literally my favorite person 😌",
     "Because you’re cute even when you’re mad 😤💕",
@@ -37,68 +24,163 @@ let reasons = [
     "Because you are mine. Yes. Mine. 💗",
     "Because I feel safe with you 💞",
     "Because life is boring without you 😭",
-    "Because I choose you. Always. 💘"
+    "Because I choose you. Always. 💘",
+    "Because my heart feels calm with you 💓",
+    "Because you are my favorite human 🥰"
 ];
 
-function showReason() {
-    let randomIndex = Math.floor(Math.random() * reasons.length);
-    document.getElementById("reasonText").innerHTML = reasons[randomIndex];
+
+/* =========================================
+   🚀 DOM LOADED INITIALIZATION
+========================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    initializeMusic();
+    initializeHearts();
+    initializeExitWarning();
+
+});
+
+
+/* =========================================
+   🎵 BACKGROUND MUSIC CONTROLLER
+========================================= */
+
+function initializeMusic() {
+
+    const music = document.getElementById("bgMusic");
+    if (!music) return;
+
+    // Restore saved time if exists
+    const savedTime = localStorage.getItem("musicTime");
+    if (savedTime) {
+        music.currentTime = parseFloat(savedTime);
+    }
+
+    // Play music after first interaction
+    document.body.addEventListener("click", function () {
+        music.play().catch(() => {});
+    }, { once: true });
+
+    // Save time every second
+    setInterval(() => {
+        if (!music.paused) {
+            localStorage.setItem("musicTime", music.currentTime);
+        }
+    }, 1000);
 }
+
+
+/* =========================================
+   💌 LOVE LETTER FUNCTIONS
+========================================= */
+
+function openLetter() {
+    const letter = document.getElementById("letter");
+    if (!letter) return;
+
+    letter.classList.remove("hidden");
+    startTypingEffect();
+}
+
+function startTypingEffect() {
+
+    const textElement = document.getElementById("typeText");
+    if (!textElement) return;
+
+    if (typeIndex < loveMessage.length) {
+        textElement.innerHTML += loveMessage.charAt(typeIndex);
+        typeIndex++;
+        setTimeout(startTypingEffect, typingSpeed);
+    }
+}
+
+
+/* =========================================
+   💘 RANDOM REASONS GENERATOR
+========================================= */
+
+function showReason() {
+
+    const reasonElement = document.getElementById("reasonText");
+    if (!reasonElement) return;
+
+    const randomIndex = Math.floor(Math.random() * reasonsList.length);
+    reasonElement.innerHTML = reasonsList[randomIndex];
+}
+
+
+/* =========================================
+   😤 RUNNING NO BUTTON
+========================================= */
+
 function moveButton() {
-    let button = document.getElementById("noBtn");
-    let x = Math.random() * window.innerWidth;
-    let y = Math.random() * window.innerHeight;
+
+    const button = document.getElementById("noBtn");
+    if (!button) return;
+
+    const maxX = window.innerWidth - button.offsetWidth;
+    const maxY = window.innerHeight - button.offsetHeight;
+
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
+
     button.style.position = "absolute";
-    button.style.left = x + "px";
-    button.style.top = y + "px";
+    button.style.left = randomX + "px";
+    button.style.top = randomY + "px";
 }
 
 function yesClicked() {
     window.location.href = "forever.html";
 }
-function createHearts() {
+
+
+/* =========================================
+   💗 FLOATING HEARTS ANIMATION
+========================================= */
+
+function initializeHearts() {
+
     const container = document.querySelector(".hearts-container");
+    if (!container) return;
 
     setInterval(() => {
+
         const heart = document.createElement("div");
         heart.classList.add("heart");
         heart.innerHTML = "💖";
 
         heart.style.left = Math.random() * 100 + "vw";
-        heart.style.fontSize = Math.random() * 20 + 15 + "px";
-        heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+        heart.style.fontSize = (Math.random() * 20 + 15) + "px";
+        heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
 
         container.appendChild(heart);
 
         setTimeout(() => {
             heart.remove();
         }, 6000);
-        
 
     }, 400);
 }
 
 
-createHearts();
-const music = document.getElementById("bgMusic");
+/* =========================================
+   💕 FUN ALERT FUNCTION
+========================================= */
 
-if (localStorage.getItem("musicTime")) {
-    music.currentTime = localStorage.getItem("musicTime");
+function showLove() {
+    alert("Hehe I knew it 😌💗 You belong to me now.");
 }
 
-music.play();
 
-setInterval(() => {
-    localStorage.setItem("musicTime", music.currentTime);
-}, 1000);
-const music = document.getElementById("bgMusic");
+/* =========================================
+   😡 CLINGY EXIT WARNING
+========================================= */
 
-if (localStorage.getItem("musicTime")) {
-    music.currentTime = localStorage.getItem("musicTime");
+function initializeExitWarning() {
+
+    window.onbeforeunload = function () {
+        return "Where are you going??? 😡💖";
+    };
 }
-
-music.play();
-
-setInterval(() => {
-    localStorage.setItem("musicTime", music.currentTime);
-}, 1000);
